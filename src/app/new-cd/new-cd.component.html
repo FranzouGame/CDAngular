@@ -1,0 +1,44 @@
+<div class="monForm">
+    <section class="subForm saisieForm">
+        <h2> Nouveau CD</h2>
+        <form [formGroup]="formulaire" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="title">Titre</label>
+                <input type="text" id="title" formControlName="title" class="form-control"/>
+                <div *ngIf="formulaire.get('title')?.invalid && (formulaire.get('title')?.dirty || formulaire.get('title')?.touched || submitted)">
+                    <small class="text-danger" *ngIf="formulaire.get('title')?.hasError('required')">Ce champ est requis.</small>
+                    <small class="text-danger" *ngIf="formulaire.get('title')?.hasError('minlength')">Ce champ doit être composé d'au moins 6 caractères.</small>
+                </div>
+                
+                <label for="author">Auteur</label>
+                <input type="text" id="author" formControlName="author" class="form-control"/>
+                
+                <label for="thumbnail">URL de l'image</label>
+                <input type="text" id="thumbnail" formControlName="thumbnail" class="form-control"/>
+                
+                <label for="dateDeSortie">Date de sortie</label>
+                <input type="date" id="dateDeSortie" formControlName="dateDeSortie" class="form-control"/>
+                
+                <label for="quantite">Quantité</label>
+                <input type="number" id="quantite" formControlName="quantite" class="form-control"/>
+                
+                <label for="price">Prix</label>
+                <input type="number" id="price" formControlName="price" class="form-control"/>
+                
+                <button type="submit" class="button">Ajouter</button>
+            </div>
+        </form>
+        
+    </section>
+    <section class="subForm saisieForm">
+        <h2>Vue du CD</h2>
+        <div *ngIf="currentCD!== undefined">
+            <h3>{{currentCD.title}}</h3>
+            <p>Sortie le : {{currentCD.dateDeSortie}}</p>
+            <p>Auteur / groupe : {{currentCD.author}}</p>
+            <p>Prix : {{currentCD.price | currency : 'EUR'}}</p>
+            <p>Quantité : {{currentCD.quantite}}</p>
+            <img [src]="currentCD.thumbnail" [alt]="currentCD.title">
+        </div>
+    </section>
+</div>

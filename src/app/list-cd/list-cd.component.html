@@ -1,0 +1,5 @@
+<div class="list-cd">
+    <ng-container *ngFor="let unCd of listcd">
+        <app-cd *ngIf="unCd.quantite > 0" [cd]="unCd"></app-cd>
+    </ng-container>
+</div>
