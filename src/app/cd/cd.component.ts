@@ -2,10 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CD } from '../models/cd.models';
 import { CdsService } from '../services/cds.service';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cd',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './cd.component.html',
   styleUrl: './cd.component.scss'
 })
@@ -19,10 +22,12 @@ export class CDComponent implements OnInit {
 
   ngOnInit(): void {
     this.idcd = this.route.snapshot.params['id'];
-    if(this.idcd !== undefined){
-      this.theCd = this.cdService.getCdById(+this.idcd);
+    if (this.idcd !== undefined) {
+      this.cdService.getCDById(+this.idcd).subscribe((cd) => {
+        this.theCd = cd;
+      });
     }
-    else{
+    else {
       this.theCd = this.cd;
     }
   }

@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CD } from '../models/cd.models';
+import { CdsService } from '../services/cds.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-new-cd',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './new-cd.component.html',
   styleUrl: './new-cd.component.scss'
 })
@@ -16,7 +20,8 @@ export class NewCDComponent {
   submitted = false;
 
 
-  constructor(private formBuilder : FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private cdsService: CdsService, private router: Router) { }
+
 
   ngOnInit(): void {
     this.thumbRegex = new RegExp('^(http(s?):\/\/).+(\.jpg|\.jpeg|\.png)$');
@@ -49,12 +54,26 @@ export class NewCDComponent {
 
   onSubmit(): void {
     this.submitted = true;
-
-    if (this.formulaire.invalid) {
-      this.formulaire.markAllAsTouched();
-      return;
-    }
-
-    console.log("Formulaire valide :", this.formulaire.value);
+  
+    let newCD: CD = {
+      id: 0, // Id fictif
+      title: this.formulaire.get('title')?.value,
+      author: this.formulaire.get('author')?.value,
+      price: this.formulaire.get('price')?.value,
+      thumbnail: this.formulaire.get('thumbnail')?.value,
+      dateDeSortie: this.formulaire.get('dateDeSortie')?.value,
+      quantite: this.formulaire.get('quantite')?.value,
+      onSale: false
+    };
+  
+    this.cdsService.addCD(newCD).subscribe({
+      next: (cd) => {
+        console.log('CD ajouté avec succès :', cd);
+        this.router.navigate(['/catalog']);
+      },
+      error: (err) => {
+        console.error('Erreur lors de l’ajout du CD :', err);
+      }
+    });
   }
 }
